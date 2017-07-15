@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2015-2016 the original author or authors. Licensed under the 
+	Apache License, Version 2.0 (the "License"); you may not use this file except 
+	in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szu.insight.dsw.domain.StatementConfig">
+	<resultMap type="StatementConfig" id="StatementConfig">
+		<id property="id" column="ID"  jdbcType="INTEGER"/>
+		<result property="sql" column="SQL_STRING" jdbcType="VARCHAR" />
+		<result property="type" column="TYPE" jdbcType="VARCHAR" />
+		<result property="resultType" column="RESULT_TYPE" jdbcType="VARCHAR" />
+		<result property="alias" column="ALIAS" jdbcType="VARCHAR" />
+		<result property="category" column="CATEGORY" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	<sql id="TABLE">
+		STATEMENT
+	</sql>
+	<select id="getAll" resultMap="StatementConfig">
+		SELECT * FROM <include refid="TABLE"/>
+	</select>
+	<select id="getByPK" resultMap="StatementConfig">
+		SELECT * FROM <include refid="TABLE"/>
+		WHERE ID = #{id}
+	</select>
+	
+	<select id="getByAlias" resultMap="StatementConfig">
+		SELECT * FROM <include refid="TABLE"/>
+		WHERE ALIAS = #{alias}
+	</select>
+	
+	<select id="select" resultMap="StatementConfig">
+		SELECT * FROM <include refid="TABLE"/>
+		<where>
+			<if test="alias !=null and alias != ''">
+				ALIAS = #{alias}
+			</if>
+			<if test="category !=null and category != ''">
+				AND CATEGORY = #{category}
+			</if>
+		</where>	
+	</select>
+	
+	<update id="update" parameterType="StatementConfig">
+		UPDATE <include refid="TABLE"></include>
+		<set>
+			<if test="sql!=null">
+				SQL_STRING=#{sql,jdbcType=VARCHAR},
+			</if>
+			<if test="alias!=null">
+				ALIAS=#{alias,jdbcType=VARCHAR},
+			</if>
+			<if test="category!=null">
+				CATEGORY=#{category,jdbcType=VARCHAR}
+			</if>
+		</set>
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+	
+	<insert id="add" parameterType="StatementConfig" useGeneratedKeys="true"
+		keyProperty="id" keyColumn="ID">
+		INSERT INTO <include refid="TABLE"></include>
+		(SQL_STRING,ALIAS,CATEGORY)
+		VALUES(
+			#{sql} , #{alias} , #{category}
+		)
+	</insert>
+	
+	<delete id="delByPK" parameterType="Long">
+		DELETE FROM <include refid="TABLE"></include>
+		<where>
+			ID = #{id}
+		</where>
+	</delete>
+</mapper>

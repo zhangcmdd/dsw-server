@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2015-2016 the original author or authors. Licensed under the 
+	Apache License, Version 2.0 (the "License"); you may not use this file except 
+	in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szu.insight.dsw.domain.DataSourceConfig">
+	<resultMap type="DataSourceConfig" id="DataSourceConfig">
+		<id property="id" column="ID"  jdbcType="INTEGER"/>
+		<result property="alias" column="ALIAS" jdbcType="VARCHAR" />
+		<result property="type" column="TYPE" jdbcType="VARCHAR" />
+		<result property="driver" column="DRIVER" jdbcType="VARCHAR" />
+		<result property="url" column="URL" jdbcType="VARCHAR" />
+		<result property="username" column="USERNAME" jdbcType="VARCHAR" />
+		<result property="password" column="PASSWORD" jdbcType="VARCHAR" />
+		<result property="initialSize" column="INITIAL_SIZE" jdbcType="INTEGER" />
+		<result property="minIdle" column="MIN_IDLE" jdbcType="INTEGER" />
+		<result property="maxActive" column="MAX_ACTIVE" jdbcType="INTEGER" />
+		<result property="maxIdle" column="MAX_IDLE" jdbcType="INTEGER" />
+		<result property="maxWait" column="MAX_WAIT" jdbcType="INTEGER" />
+		<result property="timeBetweenEvictionRunsMillis" column="TIME_BET_EVI_RUNS_MILLIS" jdbcType="INTEGER" />
+		<result property="validationQuery" column="VALIDATION_QUERY" jdbcType="VARCHAR" />
+		<result property="testWhileIdle" column="TEST_WHILE_IDLE" jdbcType="INTEGER" />
+		<result property="poolPreparedStatements" column="POOL_PREPARED_STATEMENTS" jdbcType="INTEGER" />
+		<result property="maxPoolPreparedStatementPerConnectionSize" column="MAX_POOL_PER_CONNS" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="TABLE">
+		DATASOURCE
+	</sql>
+	<select id="getAll" resultMap="DataSourceConfig">
+		SELECT * FROM <include refid="TABLE"/>
+	</select>
+	
+	<select id="getByPK" resultMap="DataSourceConfig">
+		SELECT * FROM <include refid="TABLE"/>
+		WHERE ID = #{id}
+	</select>
+	<select id="getByAlias" resultMap="DataSourceConfig">
+		SELECT * FROM <include refid="TABLE"/>
+		WHERE ALIAS = #{alias}
+	</select>
+	
+	<update id="update" parameterType="DataSourceConfig">
+		UPDATE <include refid="TABLE"></include>
+		<set>
+			<if test="alias!=null">
+				ALIAS=#{alias,jdbcType=VARCHAR},
+			</if>
+			<if test="name!=null">
+				NAME=#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="username!=null">
+				USERNAME=#{username},
+			</if>
+			<if test="password!=null">
+				PASSWORD=#{password},
+			</if>
+		</set>
+		<where>
+			ID = #{id}
+		</where>
+	</update>
+	
+	<insert id="add" parameterType="DataSourceConfig" useGeneratedKeys="true"
+		keyProperty="id" keyColumn="ID">
+		INSERT INTO <include refid="TABLE"></include>
+		(ALIAS , NAME , TYPE , DRIVER , URL , USERNAME , PASSWORD , INITIAL_SIZE , MIN_IDLE , MAX_IDLE , MAX_ACTIVE , MAX_WAIT , 
+			TIME_BET_EVI_RUNS_MILLIS, VALIDATION_QUERY, TEST_WHILE_IDLE, POOL_PREPARED_STATEMENTS, MAX_POOL_PER_CONNS)
+		VALUES(
+			#{alias},
+			#{name},
+			#{type},
+			#{driver},
+			#{url},
+			#{username},
+			#{password},
+			#{initialSize},
+			#{minIdle},
+			#{maxIdle},
+			#{maxActive},
+			#{maxWait},
+			#{timeBetweenEvictionRunsMillis},
+			#{validationQuery},
+			#{testWhileIdle},
+			#{poolPreparedStatements},
+			#{maxPoolPreparedStatementPerConnectionSize}
+		)
+	</insert>
+	
+	<delete id="delByPK" parameterType="Long">
+		DELETE FROM <include refid="TABLE"></include>
+		<where>
+			ID = #{id}
+		</where>
+	</delete>
+	
+</mapper>
